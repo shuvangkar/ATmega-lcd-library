@@ -34,8 +34,12 @@ int main(void)
 // 		}
 // 		PORTD |= 1<<PD3;
 // 		lcd_print("Hello");
-// 		PORTD &=~(1<<PD3);
+// 		
+
+		lcd_set_cursor(3,0);
+		PORTD |= 1<<PD3;
 		lcd_print("Hello");
+		PORTD &=~(1<<PD3);
 		_delay_ms(1000);
     }
 }

@@ -55,7 +55,7 @@ void lcd_write_nibble(unsigned char data, uint8_t type)
 		RS_HI(); //for data
 	}
 	RW_LO(); //for write
-		
+	
 	EN_LO();
 	EN_HI();
 	map_data_port(data);
@@ -66,18 +66,14 @@ void lcd_write_nibble(unsigned char data, uint8_t type)
 void lcd_write_byte(unsigned char data, uint8_t type)
 {
 	uint8_t temp;
-	//_delay_us(1000);
 	
-	temp = (data>>4)& 0X0F; //Masking upper nibble
-	lcd_busy_wait();
-	//_delay_us(40);
-	lcd_write_nibble(temp,type);
-	
+	temp = (data>>4)& 0X0F;
+	lcd_write_nibble(temp,type);//Sending high nibble
 	
 	temp = data & 0X0F;
-	lcd_busy_wait();
-	//_delay_us(40);
-	lcd_write_nibble(temp,type);
+	lcd_write_nibble(temp,type);//Sending lower nible
+	_delay_us(40);
+	//lcd_busy_wait();
 }
 void lcd_write_cmd_with_delay(unsigned char data)
 {
@@ -93,23 +89,40 @@ void lcd_write_cmd_with_delay(unsigned char data)
 	lcd_write_nibble(temp,CMD);
 }
 
+void lcd_write_cmd_byte(unsigned char data)
+{
+	uint8_t temp;
+	temp = (data>>4)& 0X0F;
+	lcd_write_nibble(temp,CMD);
+	
+	temp = data & 0X0F;
+	lcd_write_nibble(temp,CMD);	
+}
+
+
 void lcd_busy_wait()
 {
 	//DDR(D7_PORT) &=~(1<<D7_PIN);;//D7 pin input for reading pin state
-	PORTB &= ~(1<<PB3);
 	RS_LO(); //for CMD
 	RW_HI(); //Read Mode
-	uint8_t pinStatue = 1;
+	
+	PORTB &= ~(1<<PB3);
+	
+	uint8_t busyFlag = 1;//Busy flag in D7 pin
 	do 
 	{
 		//EN_LO();
-		EN_HI();
+		//EN_HI();
 		EN_LO();
+		//_delay_us(0.1);
 		EN_HI();
+		busyFlag = PINB & (1 << PB3);
 		EN_LO();
-		//EN_LO();
-		pinStatue = PINB & (1 << PB3);
-		if (pinStatue)
+		_delay_us(0.5);
+		//_delay_us(0.1);
+		//EN_HI();
+		/*
+		if (busyFlag)
 		{
 			PORTD |= 1<<PD3;
 		}
@@ -117,9 +130,9 @@ void lcd_busy_wait()
 		{
 			PORTD &= ~(1<<PD3);
 		}
+		*/
 		
-		
-	} while (pinStatue);
+	} while (busyFlag);
 	
 	PORTB |= 1<<PB3;
 	RW_LO();
@@ -129,11 +142,47 @@ void lcd_busy_wait()
 
 void lcd_begin()
 {
+	_delay_ms(50);
 	lcd_port_init_4Bit();
-	lcd_write_cmd_with_delay(0x02); //to initialize LCD in 4-bit mode.
-	lcd_write_cmd_with_delay(0x28); //to initialize LCD in 2 lines, 5X7 dots and 4bit mode.
-	lcd_write_cmd_with_delay(0x0C); //Display on, cursor off
-	lcd_write_cmd_with_delay(0x80); //Beginning of the first line
+	
+	lcd_write_cmd_byte(0x03);
+	_delay_ms(5);
+	lcd_write_cmd_byte(0x03);
+	_delay_us(160);
+	lcd_write_cmd_byte(0x03);
+	_delay_us(160);
+	lcd_write_cmd_byte(0x02); //to initialize LCD in 4-bit mode.
+	_delay_ms(10);
+	lcd_write_cmd_byte(0x28); //to initialize LCD in 2 lines, 5X7 dots and 4bit mode.
+	_delay_ms(10);
+	lcd_write_cmd_byte(0x0C); //Display on, cursor off
+	_delay_ms(10);
+	lcd_write_cmd_byte(0x80); //Beginning of the first line
+	_delay_ms(10);
+}
+
+void lcd_set_cursor(char x,char y)
+{
+	if(x<40)
+	{
+		switch(y)
+		{
+			case 0://1 line starts at 0×80(0b10000000)
+			x |=0b10000000;
+			break;
+			case 1://2 line starts at 0xC0(0b11000000)
+			x |=0b11000000;
+			break;
+			case 2://3 line starts at 0×94(0b10010100)
+			x |=0b10010100;
+			break;
+			case 3://4 line starts at 0xD4(0b11010100)
+			x |=0b11010100;
+			break;
+		}
+		lcd_write_byte(x,CMD);
+		//_delay_ms(1);
+	}
 }
 
 void lcd_print(char* str)

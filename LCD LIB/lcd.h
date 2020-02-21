@@ -52,6 +52,7 @@ void lcd_busy_wait();
 /**************************************/
 
 void lcd_begin();
+void lcd_set_cursor(char x,char y);
 void lcd_print(char* str);
 
 /**************************************/

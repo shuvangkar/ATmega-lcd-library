@@ -6,3 +6,9 @@ The LCD library I have used so far has few drawbacks
 - Most of the libraries are slow enough
 - These libraries are good for project and drastically bad for production environment 
 - These LCD library uses long delay between commands. This delay() could have easily avoided using the [Busy flag]()
+- Does not work if interrupt routines invokes in higher frequency. 
+
+I hope this library potentially solve all the problems 
+
+## Time Estimation
+So the display takes on average 50uS for printing a character @16MHz clock speed of atmega328 microcontroller.

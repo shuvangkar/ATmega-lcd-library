@@ -75,6 +75,7 @@ void lcd_write_byte(unsigned char data, uint8_t type)
 	_delay_us(40);
 	//lcd_busy_wait();
 }
+
 void lcd_write_cmd_with_delay(unsigned char data)
 {
 	uint8_t temp;

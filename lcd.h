@@ -16,26 +16,26 @@
 /**************************************/
 /*			 LCD Connection           */
 /**************************************/
-#define RS_PORT		PORTD
-#define RS_PIN		PD5
+#define RS_PORT		PORTB
+#define RS_PIN		PB0
 
 #define RW_PORT		PORTD
-#define RW_PIN		PD6
+#define RW_PIN		PD7
 
-#define EN_PORT		PORTD
-#define EN_PIN		PD7
+#define EN_PORT		PORTB
+#define EN_PIN		PB1
 
 #define D4_PORT		PORTB
-#define D4_PIN		PB0
+#define D4_PIN		PB2
 
 #define D5_PORT		PORTB
-#define D5_PIN		PB1
+#define D5_PIN		PB3
 
 #define D6_PORT		PORTB
-#define D6_PIN		PB2
+#define D6_PIN		PB4
 
 #define D7_PORT		PORTB
-#define D7_PIN		PB3
+#define D7_PIN		PB5
 
 /**************************************/
 /*	 LCD Library Internal Functions	  */

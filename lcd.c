@@ -5,9 +5,14 @@
  *  Author: Shuvangkar
  */ 
 #include "lcd.h"
+#include <string.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /***************Command lists******************/
 
+char _lcdBuf[16];
 
 void lcd_port_init_4Bit()
 {
@@ -143,7 +148,7 @@ void lcd_busy_wait()
 }
 
 
-void lcd_begin()
+void lcdBegin()
 {
 	_delay_ms(50);
 	lcd_port_init_4Bit();
@@ -164,7 +169,7 @@ void lcd_begin()
 	_delay_ms(10);
 }
 
-void lcd_set_cursor(char x,char y)
+void lcdGotoXY(char x,char y)
 {
 	if(x<40)
 	{
@@ -188,7 +193,7 @@ void lcd_set_cursor(char x,char y)
 	}
 }
 
-void lcd_clear()
+void lcdClear()
 {
 	lcd_write_cmd_byte(0x01);
 	_delay_ms(10);
@@ -198,7 +203,7 @@ void lcd_clear()
 	//lcd_write_byte(0x02,CMD);        //returns the display to its original status if it was shifted.
 }
 
-void lcd_print(char* str)
+void lcdPrint(char* str)
 {
 	uint8_t i = 0;
 	//lcd_write_byte(0x80,CMD);
@@ -207,4 +212,18 @@ void lcd_print(char* str)
 		lcd_write_byte(str[i],DATA);
 		i++;
 	}
+}
+
+void lcdPrintU16(uint16_t n)
+{
+	sprintf(_lcdBuf, "%d", n);
+	lcdPrint(_lcdBuf);
+}
+//void lcdPrintS16(int16_t n);
+void lcdPrintFloat(float n, uint8_t before, uint8_t after)
+{
+	//sprintf(_lcdBuf,"%1.5f",n);
+	//sprintf(output, "   %1.5f", f);
+	dtostrf(n,before, after, _lcdBuf);
+	lcdPrint(_lcdBuf);
 }

@@ -51,10 +51,14 @@ void lcd_busy_wait();
 /*			 LCD Public Functions	  */
 /**************************************/
 
-void lcd_begin();
-void lcd_clear();
-void lcd_set_cursor(char x,char y);
-void lcd_print(char* str);
+void lcdBegin();
+void lcdClear();
+void lcdGotoXY(char x,char y);
+void lcdPrint(char* str);
+
+void lcdPrintU16(uint16_t n);
+void lcdPrintS16(int16_t n);
+void lcdPrintFloat(float n, uint8_t before, uint8_t after);
 
 /**************************************/
 /*			 COMMON MACRO		     */

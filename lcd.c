@@ -6,6 +6,8 @@
  */ 
 #include "lcd.h"
 
+/***************Command lists******************/
+
 
 void lcd_port_init_4Bit()
 {
@@ -184,6 +186,16 @@ void lcd_set_cursor(char x,char y)
 		lcd_write_byte(x,CMD);
 		//_delay_ms(1);
 	}
+}
+
+void lcd_clear()
+{
+	lcd_write_cmd_byte(0x01);
+	_delay_ms(10);
+	lcd_write_cmd_byte(0x02);
+	_delay_ms(10);
+	//lcd_write_byte(0x01,CMD);        //Clear the display
+	//lcd_write_byte(0x02,CMD);        //returns the display to its original status if it was shifted.
 }
 
 void lcd_print(char* str)

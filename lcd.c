@@ -222,8 +222,10 @@ void lcdPrintU16(uint16_t n)
 //void lcdPrintS16(int16_t n);
 void lcdPrintFloat(float n, uint8_t before, uint8_t after)
 {
-	//sprintf(_lcdBuf,"%1.5f",n);
-	//sprintf(output, "   %1.5f", f);
-	dtostrf(n,before, after, _lcdBuf);
+	char format[10];
+	sprintf(format,"%%0%d.%df",before+after+1,after);//generating format string
+	//sprintf(_lcdBuf,"%07.2f",n);
+	sprintf(_lcdBuf,format,n);
+	//dtostrf(n,before, after, _lcdBuf);
 	lcdPrint(_lcdBuf);
 }

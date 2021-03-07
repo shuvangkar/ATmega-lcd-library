@@ -11,7 +11,8 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
-#include "util/delay.h"
+#include <util/delay.h>
+#include <avr/pgmspace.h>
 
 /**************************************/
 /*			 LCD Connection           */
@@ -55,6 +56,7 @@ void lcdBegin();
 void lcdClear();
 void lcdGotoXY(char x,char y);
 void lcdPrint(char* str);
+void lcdPrintF(const char *str);
 
 void lcdPrintU16(uint16_t n);
 void lcdPrintS16(int16_t n);

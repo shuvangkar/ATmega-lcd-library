@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 /***************Command lists******************/
 
 char _lcdBuf[16];
@@ -212,6 +213,18 @@ void lcdPrint(char* str)
 		lcd_write_byte(str[i],DATA);
 		i++;
 	}
+}
+
+void lcdPrintF(const char *str)
+{
+	char *p = str;
+	unsigned char c;
+	do
+	{
+		c = pgm_read_byte(p++);
+		lcd_write_byte(c,DATA);
+		//SerialPrintChar(c);
+	}while(c);
 }
 
 void lcdPrintU16(uint16_t n)

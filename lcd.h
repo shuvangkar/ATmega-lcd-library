@@ -90,6 +90,9 @@ void lcdPrintFloat(float n, uint8_t before, uint8_t after);
 
 #define CMD 0
 #define DATA 1
+
+
+extern char _lcdBuf[17];
 #endif /* LCD_H_ */
 
 /*

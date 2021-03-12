@@ -13,7 +13,7 @@
 
 /***************Command lists******************/
 
-char _lcdBuf[16];
+char _lcdBuf[17];
 
 void lcd_port_init_4Bit()
 {
@@ -222,8 +222,14 @@ void lcdPrintF(const char *str)
 	do
 	{
 		c = pgm_read_byte(p++);
-		lcd_write_byte(c,DATA);
-		//SerialPrintChar(c);
+		if (c == 0)
+		{
+			break;
+		}
+		else
+		{
+			lcd_write_byte(c,DATA);
+		}
 	}while(c);
 }
 
